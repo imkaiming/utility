@@ -11,7 +11,7 @@ __pycache__/
 # Local inputs and generated outputs
 pdf2txt/input.pdf
 pdf2txt/output.txt
-video2txt/temp_audio.wav
+media2txt/temp_audio.wav
 text2speech/aria_texte_complet.txt
 text2speech/chapters/
 text2speech/MP3_ARIA/
