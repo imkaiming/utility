@@ -40,10 +40,9 @@ usage() {
 Usage:
   ./media.sh -c audio      -i <file-or-url> [-o <directory-or-audio-file>] [audio options]
   ./media.sh -c transcript -i <file-or-url> [-o <directory-or-text-file>] [-l <language>]
-  ./media.sh -c download   -i <url>          [-o <directory-or-media-file>]
 
 Required:
-  -c, --command NAME       Operation: audio, transcript, or download
+  -c, --command NAME       Operation: audio or transcript
   -i, --input PATH_OR_URL  Local media path or supported URL
 
 Common options:
@@ -63,7 +62,6 @@ Examples:
   ./media.sh -c audio -o downloads -i 'C:/Users/kai/dev/utility/media-tools/video.mp4'
   ./media.sh -c transcript -i 'C:/Users/kai/dev/utility/media-tools/video.mp4'
   ./media.sh -c transcript -i 'recording.mp3' -o transcripts -l fr
-  ./media.sh -c download -i 'https://example.com/video'
 
 An output path ending in a slash, naming an existing directory, or lacking a
 file extension is treated as a directory. A path with an extension is a file.
@@ -192,17 +190,5 @@ case "$command_name" in
     require_python_package faster_whisper
     "$PYTHON" audio2txt.py "$audio_input" "$target" "$language"
     ;;
-  download)
-    is_url "$input" || die "download requires an http:// or https:// URL."
-    if [[ -z "$output" ]]; then output="$SCRIPT_DIR/downloads"; fi
-    if output_is_directory "$output"; then
-      mkdir -p -- "$output"
-      template="$output/%(title)s.%(ext)s"
-    else
-      mkdir -p -- "$(dirname -- "$output")"
-      template="$output"
-    fi
-    download_media "$input" "$template"
-    ;;
-  *) die "Unknown operation '$command_name'. Choose audio, transcript, or download." ;;
+  *) die "Unknown operation '$command_name'. Choose audio or transcript." ;;
 esac
