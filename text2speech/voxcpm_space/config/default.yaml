@@ -1,0 +1,14 @@
+model:
+  id: openbmb/VoxCPM2
+  revision: 32279effe8c19989596f05d353d1447f51d9e915
+generation:
+  language: auto
+  voice_description: "A clear, natural voice, speaking at a comfortable pace"
+  seed: 42
+  guidance_scale: 2.0
+  inference_steps: 10
+  max_tokens: 512
+runtime:
+  max_text_chars: 500
+  gpu_seconds: 60
+  artifact_ttl_seconds: 3600

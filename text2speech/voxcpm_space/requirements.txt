@@ -1,0 +1,11 @@
+voxcpm==2.0.3
+torch==2.8.0
+torchaudio==2.8.0
+torchcodec==0.7.0
+gradio==6.1.0
+spaces==0.51.3
+soundfile==0.14.0
+numpy==2.2.6
+PyYAML==6.0.3
+huggingface-hub==0.36.0
+transformers==4.57.6
