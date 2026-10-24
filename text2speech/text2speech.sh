@@ -3,13 +3,16 @@
 # usage: ./text2speech.sh -i <input_path> [-o <output_dir>] [-v <voice>] [-r <rate>]
 # example: ./text2speech.sh -i input.txt -v fr-FR-VivienneMultilingualNeural -r -15%
 
-# 1. Detect virtual environment dynamically
-if [ -f "./venv/Scripts/python.exe" ]; then
-    PYTHON="./venv/Scripts/python.exe"
-elif [ -f "./venv/bin/python" ]; then
-    PYTHON="./venv/bin/python"
+# 1. Use the single environment at the utility project root.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+if [ -f "$PROJECT_ROOT/.venv/Scripts/python.exe" ]; then
+    PYTHON="$PROJECT_ROOT/.venv/Scripts/python.exe"
+elif [ -f "$PROJECT_ROOT/.venv/bin/python" ]; then
+    PYTHON="$PROJECT_ROOT/.venv/bin/python"
 else
-    PYTHON="python3"
+    echo "[ERROR] Project environment not found at $PROJECT_ROOT/.venv" >&2
+    exit 1
 fi
 
 INPUT_DIR=""
@@ -43,9 +46,9 @@ if [ -z "$INPUT_DIR" ]; then
 fi
 
 # 3. Check if edge-tts is installed in the environment
-if ! $PYTHON -c "import edge_tts" &> /dev/null; then
+if ! "$PYTHON" -c "import edge_tts" &> /dev/null; then
     echo "edge-tts not found in environment. Installing..."
-    $PYTHON -m pip install edge-tts
+    "$PYTHON" -m pip install edge-tts
     if [ $? -ne 0 ]; then
         echo "Failed to install edge-tts."
         exit 1
@@ -54,9 +57,9 @@ fi
 
 # 4. Execute python script
 if [ "$NO_COMBINE" = true ]; then
-    $PYTHON text2speech.py -i "$INPUT_DIR" -o "$OUTPUT_DIR" -v "$VOICE" -r "$RATE" --volume "$VOLUME" --pitch "$PITCH" --no-combine
+    "$PYTHON" "$SCRIPT_DIR/text2speech.py" -i "$INPUT_DIR" -o "$OUTPUT_DIR" -v "$VOICE" -r "$RATE" --volume "$VOLUME" --pitch "$PITCH" --no-combine
 else
-    $PYTHON text2speech.py -i "$INPUT_DIR" -o "$OUTPUT_DIR" -v "$VOICE" -r "$RATE" --volume "$VOLUME" --pitch "$PITCH"
+    "$PYTHON" "$SCRIPT_DIR/text2speech.py" -i "$INPUT_DIR" -o "$OUTPUT_DIR" -v "$VOICE" -r "$RATE" --volume "$VOLUME" --pitch "$PITCH"
 fi
 
 if [ $? -ne 0 ]; then

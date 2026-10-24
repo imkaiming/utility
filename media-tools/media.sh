@@ -4,17 +4,14 @@ set -Eeuo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Prefer the environment created by `uv venv .venv`; retain support for `venv`.
-if [[ -f ".venv/Scripts/python.exe" ]]; then
-  PYTHON=".venv/Scripts/python.exe"
-elif [[ -f ".venv/bin/python" ]]; then
-  PYTHON=".venv/bin/python"
-elif [[ -f "venv/Scripts/python.exe" ]]; then
-  PYTHON="venv/Scripts/python.exe"
-elif [[ -f "venv/bin/python" ]]; then
-  PYTHON="venv/bin/python"
+PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+if [[ -f "$PROJECT_ROOT/.venv/Scripts/python.exe" ]]; then
+  PYTHON="$PROJECT_ROOT/.venv/Scripts/python.exe"
+elif [[ -f "$PROJECT_ROOT/.venv/bin/python" ]]; then
+  PYTHON="$PROJECT_ROOT/.venv/bin/python"
 else
-  PYTHON="python3"
+  echo "[ERROR] Project environment not found at $PROJECT_ROOT/.venv" >&2
+  exit 1
 fi
 
 TEMP_DIR=""
